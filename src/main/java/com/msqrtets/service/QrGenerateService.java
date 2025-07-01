@@ -8,25 +8,32 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class QrGenerateService {
 
-    public String generateQRCode(String qrText, String fileName) {
-        int width = 300;
-        int height = 300;
+    private static long counter = 0;
+    private static final int WIDTH = 300;
+    private static final int HEIGHT = 300;
+    private static final String BASE_URL = "https://oxu.az/tag/";
 
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+    public String generateQRCode(String tagName) {
+        String qrUrl = BASE_URL + tagName;
+        String fileName = tagName + "_" + counter++ + ".png";
+
         try {
-            BitMatrix bitMatrix = qrCodeWriter.encode(qrText, BarcodeFormat.QR_CODE, width, height);
-            Path path = FileSystems.getDefault().getPath(fileName);
-            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
-            System.out.println("QR kod yaradıldı: " + fileName);
-            return "QR kod yaradıldı: " + fileName;
+            BitMatrix matrix = new QRCodeWriter().encode(qrUrl, BarcodeFormat.QR_CODE, WIDTH, HEIGHT);
+            Path filePath = FileSystems.getDefault().getPath(fileName);
+            MatrixToImageWriter.writeToPath(matrix, "PNG", filePath);
+
+            log.info("QR kod uğurla yaradıldı: {}", fileName);
+            return fileName;
         } catch (WriterException | IOException e) {
-            e.printStackTrace();
-            return "QR kod yaradılarkən xəta baş verdi: " + e.getMessage();
+            log.error("QR kod yaradılarkən xəta baş verdi", e);
+            return null;
         }
     }
 }
