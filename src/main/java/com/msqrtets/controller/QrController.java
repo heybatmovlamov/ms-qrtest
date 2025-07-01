@@ -2,9 +2,7 @@ package com.msqrtets.controller;
 
 import com.msqrtets.service.QrGenerateService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -12,6 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class QrController {
 
     private final QrGenerateService service;
+
+    @GetMapping("/qrr")
+    public String qr(@RequestParam String url) {
+        return service.generateQRCode(url, "myqr.png");
+    }
 
     @GetMapping("/qr")
     public String qr() {
