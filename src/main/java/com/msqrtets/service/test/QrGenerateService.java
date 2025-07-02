@@ -1,4 +1,4 @@
-package com.msqrtets.service;
+package com.msqrtets.service.test;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;

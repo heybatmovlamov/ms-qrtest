@@ -1,4 +1,4 @@
-package com.msqrtets.service;
+package com.msqrtets.service.test;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

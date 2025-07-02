@@ -1,7 +1,7 @@
 package com.msqrtets.controller;
 
-import com.msqrtets.service.QrGenerateService;
-import com.msqrtets.service.RecaptchaService;
+import com.msqrtets.service.test.QrGenerateService;
+import com.msqrtets.service.test.RecaptchaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
