@@ -1,6 +1,6 @@
 package com.msqrtets.controller;
 
-import com.msqrtets.service.QrGenerateService;
+import com.msqrtets.service.test.QrGenerateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
