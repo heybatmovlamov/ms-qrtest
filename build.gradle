@@ -39,6 +39,12 @@ dependencies {
     //QR
     implementation 'com.google.zxing:core:3.5.1'
     implementation 'com.google.zxing:javase:3.5.1'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'  // or latest version
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    // If you use Lombok, also add these:
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
