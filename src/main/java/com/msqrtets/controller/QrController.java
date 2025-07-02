@@ -2,20 +2,27 @@ package com.msqrtets.controller;
 
 import com.msqrtets.service.QrGenerateService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/test")
+@RequestMapping("/v1/test/qr")
 public class QrController {
 
     private final QrGenerateService service;
 
-    @GetMapping("/qr/{name}")
-    public String qr(@PathVariable String name) {
-        return service.generateQRCode(name);
+    @PostMapping("/generate")
+    public ResponseEntity<String> generateQr(@RequestParam String secret) {
+        return ResponseEntity.ok(service.generateQrCode(secret));
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<Void> validateQr(@RequestParam String token, @RequestParam String secret) {
+        service.validateToken(token, secret);
+        return ResponseEntity.ok().build();
     }
 }

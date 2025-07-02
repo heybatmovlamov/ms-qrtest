@@ -8,6 +8,9 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -15,25 +18,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class QrGenerateService {
 
-    private static long counter = 0;
-    private static final int WIDTH = 300;
-    private static final int HEIGHT = 300;
-    private static final String BASE_URL = "https://oxu.az/tag/";
+    private final Map<String, String> tokenSecretMap = new HashMap<>();
+    private final Map<String, String> urlSecretMap = new HashMap<>();
 
-    public String generateQRCode(String tagName) {
-        String qrUrl = BASE_URL + tagName;
-        String fileName = tagName + "_" + counter++ + ".png";
+    public String generateQrCode(String secret) {
+        String token = generateTokenAndSave(secret);
+        String url = "http://localhost:8080/v1/test/qr/verify?token=" + token;
 
         try {
-            BitMatrix matrix = new QRCodeWriter().encode(qrUrl, BarcodeFormat.QR_CODE, WIDTH, HEIGHT);
-            Path filePath = FileSystems.getDefault().getPath(fileName);
-            MatrixToImageWriter.writeToPath(matrix, "PNG", filePath);
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            BitMatrix bitMatrix = qrCodeWriter.encode(url, BarcodeFormat.QR_CODE, 300, 300);
 
-            log.info("QR kod uğurla yaradıldı: {}", fileName);
-            return fileName;
+            Path path = FileSystems.getDefault().getPath("qr-" + token + ".png");
+            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            return url;
+
         } catch (WriterException | IOException e) {
             log.error("QR kod yaradılarkən xəta baş verdi", e);
             return null;
         }
     }
+
+    public void validateToken(String token, String secret) {
+        String correctSecret = tokenSecretMap.get(token);
+        if (correctSecret == null || !correctSecret.equals(secret)) {
+            throw new RuntimeException();
+        }
+        log.info("User valid !");
+    }
+
+    private String generateTokenAndSave(String secret) {
+        String token = UUID.randomUUID().toString();
+        tokenSecretMap.put(token, secret);
+        return token;
+    }
+
 }
