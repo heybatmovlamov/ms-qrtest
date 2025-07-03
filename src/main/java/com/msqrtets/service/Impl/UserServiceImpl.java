@@ -1,54 +1,54 @@
 package com.msqrtets.service.Impl;
 
-import com.msqrtets.model.User;
-import com.msqrtets.model.dto.UserRequestDto;
-import com.msqrtets.model.dto.UserResponseDto;
-import com.msqrtets.model.mapper.UserMapper;
+import com.msqrtets.entity.User;
+import com.msqrtets.mapper.UserMapper;
+import com.msqrtets.model.dto.UserRequest;
+import com.msqrtets.model.dto.UserResponse;
 import com.msqrtets.repository.UserRepository;
 import com.msqrtets.service.UserService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UserRepository repository;
+    private final UserMapper mapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
 
     @Transactional
     @Override
-    public UserResponseDto createUser(UserRequestDto requestDto) {
-        return userMapper.toDto(userRepository.save(userMapper.toEntity(requestDto)));
+    public UserResponse createUser(UserRequest dto) {
+        return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
-    public UserResponseDto getUserById(Long id) {
-        return userRepository.findById(id)
-                .map(userMapper::toDto)
+    public UserResponse getUserById(Long id) {
+        return repository.findById(id)
+                .map(mapper::toDto)
                 .orElseThrow(() -> new RuntimeException("No user with id : " + id));
     }
 
     @Override
-    public List<UserResponseDto> getAllUsers() {
-        return userMapper.toDtoList(userRepository.findAll());
+    public List<UserResponse> getAllUsers() {
+        return mapper.toDtoList(repository.findAll());
     }
 
     @Override
-    public UserResponseDto updateUser(Long id, UserRequestDto requestDto) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id : " + id));
+    public UserResponse updateUser(Long id, UserRequest dto) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id : " + id));
+        mapper.updateUserFromDto(dto, user);
+        return mapper.toDto(repository.save(user));
 
-        return null;
     }
 
     @Override
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        repository.deleteById(id);
 
     }
 }

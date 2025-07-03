@@ -1,22 +1,20 @@
 package com.msqrtets.service;
 
-import com.msqrtets.model.Order;
-import com.msqrtets.model.dto.OrderRequestDto;
-import com.msqrtets.model.dto.OrderResponseDto;
+import com.msqrtets.model.dto.OrderRequest;
+import com.msqrtets.model.dto.OrderResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface OrderService {
-    OrderResponseDto createOrder(OrderRequestDto orderRequestDto);
+    OrderResponse createOrder(OrderRequest orderRequest);
 
-    OrderResponseDto getOrderById(Long id);
+    OrderResponse getOrderById(Long id);
 
-    List<OrderResponseDto> getAllOrders();
+    List<OrderResponse> getAllOrders();
 
-    OrderResponseDto updateOrder(Long id, OrderRequestDto orderRequestDto);
+    OrderResponse updateOrder(Long id, OrderRequest orderRequest);
 
     void deleteOrder(Long id);
 
-    List<OrderResponseDto> getOrdersByUserId(Long userId);
+    List<OrderResponse> getOrdersByUserId(Long userId);
 }

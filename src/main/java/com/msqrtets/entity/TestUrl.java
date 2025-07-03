@@ -1,6 +1,5 @@
-package com.msqrtets.model;
+package com.msqrtets.entity;
 
-import jdk.jfr.Enabled;
 import lombok.Data;
 
 @Data

@@ -1,19 +1,19 @@
 package com.msqrtets.service;
 
 
-import com.msqrtets.model.dto.UserRequestDto;
-import com.msqrtets.model.dto.UserResponseDto;
+import com.msqrtets.model.dto.UserRequest;
+import com.msqrtets.model.dto.UserResponse;
 
 import java.util.List;
 
 public interface UserService {
-    UserResponseDto createUser(UserRequestDto requestDto);
+    UserResponse createUser(UserRequest requestDto);
 
-    UserResponseDto getUserById(Long id);
+    UserResponse getUserById(Long id);
 
-    List<UserResponseDto> getAllUsers();
+    List<UserResponse> getAllUsers();
 
-    UserResponseDto updateUser(Long id, UserRequestDto requestDto);
+    UserResponse updateUser(Long id, UserRequest requestDto);
 
     void deleteUser(Long id);
 }

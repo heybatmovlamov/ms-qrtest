@@ -1,4 +1,4 @@
-package com.msqrtets.model;
+package com.msqrtets.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,4 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id") // Order cədvəlində foreign key olacaq
     private User user;
-
-
 }

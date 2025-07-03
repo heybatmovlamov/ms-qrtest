@@ -1,4 +1,4 @@
-package com.msqrtets.model;
+package com.msqrtets.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

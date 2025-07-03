@@ -1,62 +1,63 @@
 package com.msqrtets.service.Impl;
 
-import com.msqrtets.model.Order;
-import com.msqrtets.model.dto.OrderRequestDto;
-import com.msqrtets.model.dto.OrderResponseDto;
-import com.msqrtets.model.mapper.OrderMapper;
+import com.msqrtets.entity.Order;
+import com.msqrtets.model.dto.OrderRequest;
+import com.msqrtets.model.dto.OrderResponse;
+import com.msqrtets.mapper.OrderMapper;
 import com.msqrtets.repository.OrderRepository;
 import com.msqrtets.service.OrderService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-    private final OrderRepository orderRepository;
-    private final OrderMapper orderMapper;
 
-    public OrderServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper) {
-        this.orderRepository = orderRepository;
-        this.orderMapper = orderMapper;
+    private final OrderRepository repository;
+    private final OrderMapper mapper;
+
+    @Override
+    public OrderResponse createOrder(OrderRequest dto) {
+        Order entity = mapper.toEntity(dto);
+        log.info(entity.toString());
+        return mapper.toDto(repository.save(entity));
     }
 
     @Override
-    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
-        return orderMapper.toDto(orderRepository.save(orderMapper.toEntity(orderRequestDto)));
+    public OrderResponse getOrderById(Long id) {
+        return repository.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new RuntimeException("salam"));
     }
 
     @Override
-    public OrderResponseDto getOrderById(Long id) {
-        return orderRepository.findById(id)
-                .map(orderMapper::toDto)
-                .orElseThrow(()-> new RuntimeException("salam"));
+    public List<OrderResponse> getAllOrders() {
+        return mapper.toDtoList(repository.findAll());
     }
 
     @Override
-    public List<OrderResponseDto> getAllOrders() {
-        return orderMapper.toDtoList(orderRepository.findAll());
-    }
-
-    @Override
-    public OrderResponseDto updateOrder(Long id, OrderRequestDto dto) {
-        Order order = orderRepository.findById(id)
+    public OrderResponse updateOrder(Long id, OrderRequest dto) {
+        Order order = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
 
-        Order entity = orderMapper.toEntity(dto);
-        entity.setId(order.getId());
+        mapper.updateOrderFromDto(dto, order);
 
-        return orderMapper.toDto(orderRepository.save(entity));
+        return mapper.toDto(repository.save(order));
     }
 
 
     @Override
     public void deleteOrder(Long id) {
-        orderRepository.deleteById(id);
+        repository.deleteById(id);
 
     }
 
     @Override
-    public List<OrderResponseDto> getOrdersByUserId(Long userId) {
-        return orderMapper.toDtoList(orderRepository.findByUserId(userId));
+    public List<OrderResponse> getOrdersByUserId(Long userId) {
+        return mapper.toDtoList(repository.findByUserId(userId));
     }
 }
